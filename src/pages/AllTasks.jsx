@@ -1,8 +1,10 @@
 import React from 'react'
-
+import Card from '../components/Cards'
 const AllTasks = () => {
   return (
-    <div>AllTasks</div>
+    <div>
+      <Card />
+    </div>
   )
 }
 
