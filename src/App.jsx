@@ -4,6 +4,8 @@ import Alltasks from './pages/AllTasks';
 import Completetasks from './pages/Completetasks';
 import IncompleteTasks from './pages/IncompleteTasks';
 import FavouriteTasks from './pages/FavouriteTasks';
+import Signup from './pages/Signup'
+import Login from './pages/Login'
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
             <Route path="incompletetasks" element={<IncompleteTasks />} />
             <Route path="favouritetasks" element={<FavouriteTasks />} />
           </Route>
+          <Route path="signup/" element={< Signup/>} />
+          <Route path='login/'element={< Login/>} />
         </Routes>
       </div>
     </Router>

@@ -1,8 +1,11 @@
 import React from 'react'
+import Card from '../components/Cards'
 
 const Completetasks = () => {
   return (
-    <div>Completetasks</div>
+    <div className="px-2 py-16">
+        <Card />
+      </div>
   )
 }
 
