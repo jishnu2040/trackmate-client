@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -34,11 +34,11 @@ const Login = () => {
   
       if (response.ok) {
         // Store tokens and user info in localStorage
-      localStorage.setItem('access', result.access);
-      localStorage.setItem('refresh', result.refresh);
-      localStorage.setItem('email', result.email); // Store email
-      localStorage.setItem('username', result.username); // Store username
-      localStorage.setItem('user_id', result.id); // Store user ID
+        localStorage.setItem('access', result.access);
+        localStorage.setItem('refresh', result.refresh);
+        localStorage.setItem('email', result.email); // Store email
+        localStorage.setItem('username', result.username); // Store username
+        localStorage.setItem('user_id', result.id); // Store user ID
   
         setSuccess('Login successful');
         setError(null);
@@ -56,42 +56,49 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      {success && <p className="text-green-500 text-center mb-4">{success}</p>}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium mb-1">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 to-purple-300">
+      <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg">
+        <h2 className="text-3xl font-extrabold text-center text-black mb-8">Login</h2>
+        {error && <p className="text-red-600 text-center mb-4 transition-opacity duration-500 opacity-100">{error}</p>}
+        {success && <p className="text-green-600 text-center mb-4 transition-opacity duration-500 opacity-100">{success}</p>}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-black mb-2">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-black mb-2">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition duration-300"
+          >
+            Login
+          </button>
+        </form>
+        <div className="mt-6 text-center">
+          <p className="text-sm text-black">
+            Don't have an account? <Link to="/signup" className="text-blue-500 hover:underline">Register here</Link>
+          </p>
         </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
-        >
-          Login
-        </button>
-      </form>
+      </div>
     </div>
   );
 };

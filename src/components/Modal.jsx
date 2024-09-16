@@ -1,109 +1,125 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import api from '../api/services/axiosInstance';
+import ThemeContext from '../ThemeContext';
+import { toast, ToastContainer } from 'react-toastify'; // Import Toastify components
 
-const Modal = ({ isOpen, closeModal, refreshTasks }) => {
+const Modal = ({ closeModal }) => {
+  const { isModalOpen, taskId } = useContext(ThemeContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState(false); // Default: Incomplete (false)
-  const [error, setError] = useState(null);  // For error handling
+  const [status, setStatus] = useState(false);
+  const [error, setError] = useState(null);
 
-  if (!isOpen) return null; // If modal is not open, don't render anything
-
-  const submitHandler = async (taskData) => {
-    // Retrieve user_id from localStorage
-    const userId = localStorage.getItem('user_id');
+  useEffect(() => {
     
-    // Add user_id to taskData
-    const taskDataWithUserId = { ...taskData, user: userId };
+    const fetchTaskDetails = async () => {
+      if (taskId) {
+        try {
+          const response = await api.get(`tasks/${taskId}/`);
+          const { title, description, status } = response.data;
+          setTitle(title);
+          setDescription(description);
+          setStatus(status);
+          
+        } catch (error) {
+          setError(error.response?.data?.detail || error.message);
+          toast.error('Failed to fetch task details.'); // Show error toast
+        }
+      } else {
+        setTitle('');
+        setDescription('');
+        setStatus(false);
+      }
+    };
+
+    if (isModalOpen) {
+      fetchTaskDetails();
+    }
+  }, [taskId, isModalOpen]);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const userId = localStorage.getItem('user_id'); // Assuming user_id is stored in localStorage
+    const taskData = { title, description, status, user: userId };
+    window.location.reload();
 
     try {
-      const response = await api.post('tasks/', taskDataWithUserId); // Use Axios instance for API call
-      console.log('Task created:', response.data);
+      if (taskId) {
+        const result = await api.put(`tasks/${taskId}/`, taskData);
+        toast.success('Task updated successfully!');
 
-      // Refresh the task list after successfully creating a task
-      if (refreshTasks) {
-        refreshTasks();
+      } else {
+        await api.post('tasks/', taskData);
+        toast.success('Task created successfully!'); // Show success toast
       }
-      
-      // Reset state variables
-      setTitle('');
-      setDescription('');
-      setStatus(false);
-      setError(null);
-      
-      closeModal(); // Close modal after submission
 
+      closeModal();
     } catch (error) {
-      setError(error.response?.data?.detail || error.message); // Display specific error message
+      setError(error.response?.data?.detail || error.message);
+      toast.error('Failed to save task.'); // Show error toast
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    submitHandler({ title, description, status }); // Pass status along with title and description
-  };
+  if (!isModalOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-60">
-      <div className="bg-white dark:bg-gray-700 rounded-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Add Task</h2>
-          <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">&times;</button>
-        </div>
+      <div className="bg-white text-black dark:bg-gray-700 rounded-lg p-6 w-full max-w-md">
+        <ToastContainer /> {/* Include ToastContainer in your modal */}
+        <h2 className="text-xl font-semibold mb-4">
+          {taskId ? 'Edit Task' : 'Add New Task'}
+        </h2>
 
-        {/* Error Message */}
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {error && <p className="text-red-500 mb-4">{error}</p>}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={submitHandler}>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Title</label>
+            <label htmlFor="title" className="block text-sm font-medium mb-2">Task Title</label>
             <input
               type="text"
+              id="title"
+              className="w-full border border-gray-300 p-2 rounded"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2 border border-gray-300 text-black rounded-lg"
               required
             />
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Description</label>
+            <label htmlFor="description" className="block text-sm font-medium mb-2">Task Description</label>
             <textarea
+              id="description"
+              className="w-full border border-gray-300 p-2 rounded"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2 border border-gray-300 text-black rounded-lg"
-              rows="4"
               required
             />
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Status</label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value === 'true')} // Set status based on selection
-              className="w-full p-2 border border-gray-300 text-black rounded-lg"
-              required
-            >
-              <option value="false">Incomplete</option>
-              <option value="true">Complete</option>
-            </select>
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={status}
+                onChange={(e) => setStatus(e.target.checked)}
+              />
+              <span className="ml-2">Completed</span>
+            </label>
           </div>
 
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end">
             <button
               type="button"
+              className="mr-4 py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600"
               onClick={closeModal}
-              className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
             >
-              Close
+              Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+              className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
-              Submit
+              {taskId ? 'Update Task' : 'Create Task'}
             </button>
           </div>
         </form>
