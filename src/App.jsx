@@ -16,7 +16,7 @@ function App() {
             <Route index element={<Alltasks />} />
             <Route path="completetasks" element={<Completetasks />} />
             <Route path="incompletetasks" element={<IncompleteTasks />} />
-            <Route path="favouritetasks" element={<FavouriteTasks />} />
+            {/* <Route path="favouritetasks" element={<FavouriteTasks />} /> */}
           </Route>
           <Route path="signup/" element={< Signup/>} />
           <Route path='login/'element={< Login/>} />

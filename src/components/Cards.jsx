@@ -3,7 +3,7 @@ import { FaEdit, FaTrash, FaStar } from 'react-icons/fa';
 import { IoIosAddCircle } from "react-icons/io";
 import api from '../api/services/axiosInstance';
 
-const Card = ({ home, openModal }) => {
+const Card = ({ home, openModal, filter }) => {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
 
@@ -11,7 +11,7 @@ const Card = ({ home, openModal }) => {
   const fetchTasks = async () => {
     try {
       const response = await api.get('tasks/');
-      setTasks(response.data.results);  // Updated to access 'results' from API response
+      setTasks(response.data.results);  // Access 'results' from API response
     } catch (error) {
       setError(error.message);
     }
@@ -40,7 +40,7 @@ const Card = ({ home, openModal }) => {
   const handleDelete = async (taskId) => {
     try {
       await api.delete(`tasks/${taskId}/`);
-      setTasks(tasks.filter(task => task.id !== taskId));  // Update the tasks list after deletion
+      setTasks(tasks.filter(task => task.id !== taskId));  // Remove deleted task from list
     } catch (error) {
       setError(error.message);
     }
@@ -62,12 +62,15 @@ const Card = ({ home, openModal }) => {
     }
   };
 
+  // Filter tasks based on the filter prop
+  const filteredTasks = filter !== undefined ? tasks.filter(task => task.status === filter) : tasks;
+
   return (
     <div className="container mx-auto px-4">
       {error && <p className="text-red-500 text-center">{error}</p>}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {tasks.map((task) => (
+        {filteredTasks.map((task) => (
           <div
             key={task.id}
             className="shadow-md p-4 rounded-lg flex flex-col justify-between border border-gray-300"

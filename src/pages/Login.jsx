@@ -34,10 +34,11 @@ const Login = () => {
   
       if (response.ok) {
         // Store tokens and user info in localStorage
-        localStorage.setItem('access', result.access);
-        localStorage.setItem('refresh', result.refresh);
-        localStorage.setItem('email', result.email); // Update this if `email` is available
-        localStorage.setItem('username', result.username);
+      localStorage.setItem('access', result.access);
+      localStorage.setItem('refresh', result.refresh);
+      localStorage.setItem('email', result.email); // Store email
+      localStorage.setItem('username', result.username); // Store username
+      localStorage.setItem('user_id', result.id); // Store user ID
   
         setSuccess('Login successful');
         setError(null);

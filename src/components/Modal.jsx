@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../api/services/axiosInstance';
 
 const Modal = ({ isOpen, closeModal, refreshTasks }) => {
   const [title, setTitle] = useState('');
@@ -9,37 +10,37 @@ const Modal = ({ isOpen, closeModal, refreshTasks }) => {
   if (!isOpen) return null; // If modal is not open, don't render anything
 
   const submitHandler = async (taskData) => {
-    const accessToken = localStorage.getItem('access'); // Retrieve the token from localStorage
+    // Retrieve user_id from localStorage
+    const userId = localStorage.getItem('user_id');
+    
+    // Add user_id to taskData
+    const taskDataWithUserId = { ...taskData, user: userId };
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/v1/tasks/', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`, // Include token in the Authorization header
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(taskData), // Send title, description, and status as JSON
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create task');
-      }
-
-      const data = await response.json();
-      console.log('Task created:', data);
+      const response = await api.post('tasks/', taskDataWithUserId); // Use Axios instance for API call
+      console.log('Task created:', response.data);
 
       // Refresh the task list after successfully creating a task
-      refreshTasks();
+      if (refreshTasks) {
+        refreshTasks();
+      }
+      
+      // Reset state variables
+      setTitle('');
+      setDescription('');
+      setStatus(false);
+      setError(null);
+      
+      closeModal(); // Close modal after submission
 
     } catch (error) {
-      setError(error.message);
+      setError(error.response?.data?.detail || error.message); // Display specific error message
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     submitHandler({ title, description, status }); // Pass status along with title and description
-    closeModal(); // Close modal after submission
   };
 
   return (
