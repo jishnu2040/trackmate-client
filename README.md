@@ -1,73 +1,52 @@
-Frontend (React)
-Clone the Repository:
 
-bash
-Copy code
-git clone https://github.com/your-username/task-manager-frontend.git
-cd task-manager-frontend
-Install Dependencies:
+Task Manager Application
 
-bash
-Copy code
-npm install
-Start the Development Server:
+The Task Manager Application is designed to help users manage tasks effectively. Users can create, view, edit, and delete tasks, with functionalities for filtering and searching. The backend is built using Django REST Framework (DRF), and the fronten
+## Documentation
 
-bash
-Copy code
-npm start
-API Endpoints
-Task Management
-List All Tasks:
+This contains the whole documentaion of the api endpoints.
 
-GET /api/tasks/
-Query parameters: search, status
-Returns a paginated list of tasks.
-Retrieve a Single Task:
+https://go.postman.co/workspace/2847270d-4e21-407e-8511-0ada190cb3e4/collection/32963641-551bb0de-5285-4506-a642-521abd7ef9ca
 
-GET /api/tasks/{id}/
-Returns detailed information of a specific task.
-Create a New Task:
 
-POST /api/tasks/
-Body: { "title": "string", "description": "string", "status": "boolean" }
-Update a Task:
+## Run Locally
 
-PUT /api/tasks/{id}/
-Body: { "title": "string", "description": "string", "status": "boolean" }
-Delete a Task:
+Clone the project
 
-DELETE /api/tasks/{id}/
-Filter Tasks by Status:
+```bash
+  https://github.com/jishnu2040/trackmate-client.git
+```
 
-GET /api/tasks/?status={status}
-status can be completed or pending.
-Frontend Components
-Task List Page: Displays all tasks with filters for status. Allows users to view, edit, and delete tasks.
+Go to the project directory
 
-Create Task Form: A form to create a new task with fields for title and description.
+```bash
+  cd trackmate-client
+```
 
-Edit Task Form: Allows users to edit existing tasks.
+Install dependencies
 
-Task Detail View: Displays detailed information of a task when clicked.
+```bash
+  npm install
+```
 
-Registration and Authentication: Pages for user registration and login, including token management.
+Start the server
 
-Tech Stack
-Backend:
+```bash
+  npm run dev
+```
 
-Django
-Django REST Framework (DRF)
-PostgreSQL
-JWT for authentication
-Frontend:
 
-React
-Axios for API requests
-React Router for navigation
-CSS for styling
-Error Handling
-Backend: Handles edge cases like invalid IDs and provides appropriate error messages.
-Frontend: Displays error messages for failed API requests and other issues.
-Responsive Design
-Ensure the UI is responsive and user-friendly across all devices and screen sizes.
+## Features
+
+- Light/dark mode toggle
+- Interactive user interface
+- Responsive UI
+- Task assignment across different places
+
+
+## Tech Stack
+
+**Client:** React, TailwindCSS
+
+**Server:** Django RestFrameWork
 
