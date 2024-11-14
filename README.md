@@ -50,3 +50,14 @@ Start the server
 
 **Server:** Django RestFrameWork
 
+
+## Screenshots
+
+![App Screenshot](https://i.postimg.cc/Rq50H7ZM/Screenshot-318.png)
+
+![App Screenshot](https://i.postimg.cc/MKJ5xX7w/Screenshot-321.png)
+
+![App Screenshot](https://i.postimg.cc/kGG2PQTs/Screenshot-325.png)
+
+
+
